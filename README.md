@@ -27,7 +27,7 @@ Shared plots (cost surfaces with descent paths, convergence curves, decision bou
 4. Free-form trials go in `notebooks/experiments/YYYY-MM-DD-<topic>.ipynb`; log runs with MLflow when comparing settings.
 5. Tick the roadmap.
 
-Original course notes (Spanish) and the older `ml-topics` project are archived untouched in `references/original_notes/`.
+The original course notes (Spanish) and the older `ml-topics` project were merged into these notebooks; they remain in the git history (first commit) if needed.
 
 
 ---
@@ -119,7 +119,7 @@ make mlflow-ui    # http://127.0.0.1:5000
 │   └── data/, models/, utils/paths.py  <- Template pipeline and path helpers
 ├── data/raw/               <- ECG signals and images used by the notebooks (git-ignored)
 ├── reports/figures/        <- Figures used in the notes (mind map, network diagrams, …)
-├── references/original_notes/  <- Archived original notes
+├── references/             <- Papers, manuals and other reference material
 └── tests/unit/             <- `test_algorithms.py` checks every algorithm
 ```
 
