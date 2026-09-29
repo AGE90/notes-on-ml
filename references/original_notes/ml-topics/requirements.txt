@@ -1,0 +1,16 @@
+pyprojroot
+pathlib
+black
+pip-chill
+ipykernel
+jupyter
+ipywidgets
+pandas
+scipy
+missingno
+openpyxl
+matplotlib
+seaborn
+scikit-learn
+xgboost
+sklearn-genetic-opt
