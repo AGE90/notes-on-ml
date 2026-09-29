@@ -118,7 +118,7 @@ make mlflow-ui    # http://127.0.0.1:5000
 │   ├── visualization/      <- `plots.py` (study plots) and template EDA helpers
 │   └── data/, models/, utils/paths.py  <- Template pipeline and path helpers
 ├── data/raw/               <- ECG signals and images used by the notebooks (git-ignored)
-├── reports/figures/        <- Figures used in the notes (mind map, network diagrams, …)
+├── reports/figures/        <- Figures used in the notes (mind map from `scripts/make_mind_map.py`, network diagrams, …)
 ├── references/             <- Papers, manuals and other reference material
 └── tests/unit/             <- `test_algorithms.py` checks every algorithm
 ```
