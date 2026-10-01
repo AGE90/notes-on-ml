@@ -182,6 +182,5 @@ data/**/*
 !data/**/.gitkeep
 
 # Coding tools
-# CLAUDE.md and the ml-knowledge skill are part of this knowledge base (tracked)
-.claude/*
-!.claude/skills/
+CLAUDE.md
+.claude/
