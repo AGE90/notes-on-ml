@@ -33,7 +33,7 @@ Legend: ✅ notebook done · 🟡 partial · ⬜ to do
 |---|---|---|---|
 | ch10 | SVM: max margin, hinge loss, kernels | ⬜ | `06_svm/01_max_margin.ipynb`, `02_kernel_trick.ipynb` |
 | ch11 | Decision trees (Gini), random forests, choosing a classifier | ⬜ | `07_trees/01_cart.ipynb`, `02_random_forest.ipynb` |
-| ch11 | CNN, GAN | ⬜ | `08_deep_learning/` |
+| ch11 | CNN: cross-correlation, padding, stride | 🟡 | [08/01](../notebooks/08_deep_learning/01_cnn_cross_correlation.ipynb); next: pooling + a small CNN trained end to end, then GAN |
 
 ## Phase 4 — Unsupervised learning and systems
 
@@ -51,4 +51,5 @@ Add a line per study session (newest first), linking the note in `sessions/`.
 
 | Date | Topic | Note |
 |---|---|---|
+| 2026-10-04 | Integrated deep learning notes (CNN, cross-correlation) | – |
 | 2026-09-28 | Reorganized the knowledge base | – |

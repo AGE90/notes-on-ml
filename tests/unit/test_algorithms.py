@@ -1,7 +1,9 @@
 import numpy as np
+from scipy.signal import correlate
 from sklearn import metrics as skm
 
 from ml import metrics
+from ml.conv import cross_correlate
 from ml.features.scaling import standardize
 from ml.linalg import energy, low_rank_approx
 from ml.linear_models import add_bias, normal_equations, ridge
@@ -117,3 +119,14 @@ def test_scaling_and_svd_helpers():
     )
     assert np.allclose(low_rank_approx(X, 3), X)
     assert np.isclose(energy(np.linalg.svd(X, compute_uv=False))[-1], 1.0)
+
+
+def test_cross_correlate_matches_scipy():
+    for shape_y, shape_x in [((20,), (3,)), ((7, 9), (3, 3)), ((6, 6, 3), (3, 3, 3))]:
+        y, x = rng.normal(size=shape_y), rng.normal(size=shape_x)
+        assert np.allclose(cross_correlate(x, y), correlate(y, x, mode="valid"))
+        z = cross_correlate(x, y, padding=1)  # "same" size for odd 3-wide filters
+        assert np.allclose(z, correlate(np.pad(y, 1), x, mode="valid"))
+        every_2nd = (slice(None, None, 2),) * y.ndim
+        valid = correlate(y, x, mode="valid")
+        assert np.allclose(cross_correlate(x, y, stride=2), valid[every_2nd])

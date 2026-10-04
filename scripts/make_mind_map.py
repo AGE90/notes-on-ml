@@ -60,6 +60,7 @@ COVERED = {
     "Regression",
     "Classification",
     "MLP",
+    "CNN",
     "Metrics",
     "Regularization",
     "Feature selection",
