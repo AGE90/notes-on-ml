@@ -22,3 +22,26 @@ def condition_number(X: Array) -> float:
     """$\\kappa = \\sigma_{max} / \\sigma_{min}$: $\\kappa = 10^k$ loses about $k$ digits."""
     s = np.linalg.svd(X, compute_uv=False)
     return float(s[0] / s[-1])
+
+
+def pca(X: Array, r: int) -> tuple[Array, Array, Array]:
+    """PCA of `X` (rows are observations) through the SVD of the centered data.
+
+    Parameters
+    ----------
+    X : Array
+        Data matrix of shape (n_observations, n_features).
+    r : int
+        Number of principal components to keep.
+
+    Returns
+    -------
+    tuple[Array, Array, Array]
+        Scores $Z = X_c V_r$, principal directions $V_r$ (columns) and all the
+        singular values $s$ of $X_c$; the covariance eigenvalues are
+        $s^2 / (n - 1)$.
+    """
+    Xc = X - X.mean(axis=0)
+    _, s, VT = np.linalg.svd(Xc, full_matrices=False)
+    V_r = VT[:r].T
+    return Xc @ V_r, V_r, s

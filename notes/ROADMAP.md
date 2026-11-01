@@ -9,7 +9,7 @@ Legend: ✅ notebook done · 🟡 partial · ⬜ to do
 | Book | Topic | Status | Notebook |
 |---|---|---|---|
 | ch01 | What is ML, paradigms | ✅ | [00/01](../notebooks/00_foundations/01_what_is_ml.ipynb), [00/02](../notebooks/00_foundations/02_supervised_learning.ipynb) |
-| ch02 | Eigenvalues, SVD, condition number | 🟡 | [00/04 SVD](../notebooks/00_foundations/04_svd.ipynb) |
+| ch02 | Eigenvalues, SVD, condition number; low rank, LTI modes, attractors, DMD, Koopman | 🟡 | [00/04 SVD](../notebooks/00_foundations/04_svd_low_rank_and_dynamical_systems.ipynb) |
 | ch03 | Least squares, pseudo-inverse, Tikhonov | ✅ | [00/03](../notebooks/00_foundations/03_linear_inversion_problem.ipynb), [01/08](../notebooks/01_linear_regression/08_review.ipynb) |
 | ch04 | Normal equations, gradient descent, CG | ✅ | [01/01–05](../notebooks/01_linear_regression/) |
 | ch05 | Feature scaling, polynomial regression, overfitting | ✅ | [01/06](../notebooks/01_linear_regression/06_multivariate_and_feature_scaling.ipynb), [01/07](../notebooks/01_linear_regression/07_polynomial_regression.ipynb) |
@@ -25,7 +25,7 @@ Legend: ✅ notebook done · 🟡 partial · ⬜ to do
 | ch04 | **SGD and minibatch** | ⬜ | add `sgd()` to `ml/optimization.py`; compare batch vs. SGD vs. minibatch on a large regression |
 | ch09 | Train/CV/test, bias–variance, **learning curves** | 🟡 | `05_model_selection/03_learning_curves.ipynb`: $J_{train}$, $J_{cv}$ vs. $m$ and vs. $\lambda$ |
 | ch05, ch09 | Feature selection, hyperparameter tuning | ✅ | [05/01](../notebooks/05_model_selection/01_feature_selection.ipynb), [05/02](../notebooks/05_model_selection/02_hyperparameter_tuning.ipynb) |
-| ch02 | Eigen-decomposition, spectral radius, Rayleigh quotient | ⬜ | extend `00_foundations/04_svd` or add `05_eigen` |
+| ch02 | Eigen-decomposition, spectral radius, Rayleigh quotient | 🟡 | LTI eigenmodes in [00/04 §11](../notebooks/00_foundations/04_svd_low_rank_and_dynamical_systems.ipynb); spectral radius and Rayleigh quotient still to do, in `05_eigen` |
 
 ## Phase 3 — Other supervised models
 
@@ -40,7 +40,7 @@ Legend: ✅ notebook done · 🟡 partial · ⬜ to do
 | Book | Topic | Status | Suggested notebook |
 |---|---|---|---|
 | ch12 | $k$-means, silhouette, HDBSCAN | ⬜ | `09_clustering/` |
-| ch13 | PCA ($Z = XW$, 99 % energy rule) | ⬜ | `10_pca/`, reuse `ml.linalg.energy` |
+| ch13 | PCA ($Z = XW$, 99 % energy rule) | 🟡 | SVD route in [00/04 §8](../notebooks/00_foundations/04_svd_low_rank_and_dynamical_systems.ipynb); full treatment in `10_pca/`, reuse `ml.linalg.pca`, `ml.linalg.energy` |
 | ch14 | Anomaly detection (Gaussian, $\varepsilon$ by $F_1$) | ⬜ | `11_anomaly_detection/`, reuse `ml.metrics.f1` |
 | ch15 | Recommender systems, photo OCR pipeline | ⬜ | `12_recommenders/` |
 | ch16 | Counting (multichoose), environments | ⬜ | reference only |

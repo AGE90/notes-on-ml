@@ -1,11 +1,15 @@
 import numpy as np
+from scipy.integrate import solve_ivp
 from scipy.signal import correlate
 from sklearn import metrics as skm
+from sklearn.decomposition import PCA
 
 from ml import metrics
 from ml.conv import cross_correlate
+from ml.data import data_loader
+from ml.dynamics import damped_pendulum, dmd, lorenz, slow_manifold_system, van_der_pol
 from ml.features.scaling import standardize
-from ml.linalg import energy, low_rank_approx
+from ml.linalg import energy, low_rank_approx, pca
 from ml.linear_models import add_bias, normal_equations, ridge
 from ml.logistic import (
     cross_entropy_cost,
@@ -130,3 +134,58 @@ def test_cross_correlate_matches_scipy():
         every_2nd = (slice(None, None, 2),) * y.ndim
         valid = correlate(y, x, mode="valid")
         assert np.allclose(cross_correlate(x, y, stride=2), valid[every_2nd])
+
+
+def test_pca_matches_sklearn():
+    X = rng.normal(size=(80, 5)) @ np.diag([5, 3, 2, 1, 0.5])
+    Z, V, s = pca(X, 2)
+    sk = PCA(2).fit(X)
+    assert np.allclose(np.abs(V.T @ sk.components_.T), np.eye(2))
+    assert np.allclose(np.abs(Z), np.abs(sk.transform(X)))
+    assert np.allclose((s**2 / (len(X) - 1))[:2], sk.explained_variance_)
+
+
+def test_dmd_recovers_a_known_linear_map():
+    Q, _ = np.linalg.qr(rng.normal(size=(20, 3)))
+    eigenvalues = np.array([0.9, 0.5, 0.2])
+    D = np.column_stack(
+        [Q @ (eigenvalues**k * np.ones(3)) for k in range(30)]
+    )  # x_k = A^k x_0 with A = Q diag(eigenvalues) Q^T
+    found, modes = dmd(D[:, :-1], D[:, 1:], 3)
+    assert np.allclose(np.sort(found.real), np.sort(eigenvalues))
+    assert np.allclose(Q @ np.diag(eigenvalues) @ Q.T @ modes, modes * found)
+
+
+def test_dynamical_systems_long_term_behaviour():
+    pendulum = solve_ivp(damped_pendulum, (0, 60), [1.0, 0.0], rtol=1e-8)
+    assert np.allclose(pendulum.y[:, -1], 0, atol=1e-3)
+    cycle = solve_ivp(van_der_pol, (0, 100), [0.1, 0.0], rtol=1e-8, max_step=0.01)
+    assert abs(np.abs(cycle.y[0, -2000:]).max() - 2.0) < 0.05  # known amplitude
+    c = np.sqrt(8 / 3 * 27)
+    assert np.allclose(lorenz(0, np.array([c, c, 27.0])), 0)
+    x1, mu, lam = 0.7, -0.1, -1.0
+    x2 = lam / (lam - 2 * mu) * x1**2
+    dx = slow_manifold_system(0, np.array([x1, x2]), mu, lam)
+    assert np.isclose(dx[1], 2 * x2 / x1 * dx[0])  # stays on the invariant manifold
+
+
+def test_load_ptbxl_ecg_downloads_once_and_decodes(tmp_path, monkeypatch):
+    samples = np.arange(24, dtype="<i2")
+    calls = []
+
+    class Response:
+        content = samples.tobytes()
+
+        def raise_for_status(self):
+            pass
+
+    def get(url, timeout):
+        calls.append(url)
+        return Response()
+
+    monkeypatch.setattr(data_loader.requests, "get", get)
+    monkeypatch.setattr(data_loader, "data_external_dir", tmp_path.joinpath)
+    for _ in range(2):
+        ecg = data_loader.load_ptbxl_ecg("01234")
+    assert len(calls) == 1 and calls[0].endswith("/records500/01000/01234_hr.dat")
+    assert ecg.shape == (2, 12) and ecg[1, 0] == 0.012

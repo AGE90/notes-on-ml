@@ -10,7 +10,7 @@ Theory (with $\LaTeX$ math) and visualizations in notebooks, reproducible algori
 
 | # | Topic | Notebooks | Algorithms (`src/ml/`) |
 |---|---|---|---|
-| 00 | Foundations | [what is ML](notebooks/00_foundations/01_what_is_ml.ipynb) · [supervised learning](notebooks/00_foundations/02_supervised_learning.ipynb) · [linear inversion](notebooks/00_foundations/03_linear_inversion_problem.ipynb) · [SVD](notebooks/00_foundations/04_svd.ipynb) | `linalg.py` |
+| 00 | Foundations | [what is ML](notebooks/00_foundations/01_what_is_ml.ipynb) · [supervised learning](notebooks/00_foundations/02_supervised_learning.ipynb) · [linear inversion](notebooks/00_foundations/03_linear_inversion_problem.ipynb) · [SVD, low rank & dynamical systems](notebooks/00_foundations/04_svd_low_rank_and_dynamical_systems.ipynb) | `linalg.py`, `dynamics.py` |
 | 01 | Linear regression | [normal equations](notebooks/01_linear_regression/01_normal_equations.ipynb) · [GD theory](notebooks/01_linear_regression/02_gradient_descent_theory.ipynb) · [fixed step](notebooks/01_linear_regression/03_gd_fixed_step.ipynb) · [exact line search](notebooks/01_linear_regression/04_gd_exact_line_search.ipynb) · [quadratic interp., CG, BFGS](notebooks/01_linear_regression/05_gd_quadratic_interp_cg_bfgs.ipynb) · [multivariate & scaling](notebooks/01_linear_regression/06_multivariate_and_feature_scaling.ipynb) · [polynomial & overfitting](notebooks/01_linear_regression/07_polynomial_regression.ipynb) · [review](notebooks/01_linear_regression/08_review.ipynb) | `linear_models.py`, `optimization.py`, `features/scaling.py` |
 | 02 | Logistic regression | [hypothesis & activations](notebooks/02_logistic_regression/01_hypothesis_and_activations.ipynb) · [cost & gradient](notebooks/02_logistic_regression/02_cost_and_gradient.ipynb) · [decision boundary](notebooks/02_logistic_regression/03_decision_boundary.ipynb) · [one-vs-all](notebooks/02_logistic_regression/04_one_vs_all.ipynb) | `logistic.py` |
 | 03 | Classification metrics | [confusion matrix, P/R/F1, ROC](notebooks/03_classification_metrics/01_confusion_matrix_precision_recall_f1.ipynb) | `metrics.py` |
@@ -108,7 +108,8 @@ make mlflow-ui    # http://127.0.0.1:5000
 │   ├── 00_foundations/ … 05_model_selection/   <- Topic notebooks (theory + code + plots)
 │   └── experiments/        <- Free experiments, dated
 ├── src/ml/
-│   ├── linalg.py           <- SVD helpers, condition number
+│   ├── linalg.py           <- SVD helpers, condition number, PCA
+│   ├── dynamics.py         <- Pendulum, Van der Pol, Lorenz, slow-manifold system, DMD
 │   ├── linear_models.py    <- Bias column, normal equations, ridge, MSE cost/gradient
 │   ├── optimization.py     <- Gradient descent (fixed / exact / quadratic step), conjugate gradient
 │   ├── features/scaling.py <- Standardize, min-max, mean/unit-norm scaling, polynomial features
@@ -117,7 +118,7 @@ make mlflow-ui    # http://127.0.0.1:5000
 │   ├── neural_net.py       <- Forward propagation
 │   ├── visualization/      <- `plots.py` (study plots) and template EDA helpers
 │   └── data/, models/, utils/paths.py  <- Template pipeline and path helpers
-├── data/raw/               <- ECG signals and images used by the notebooks (git-ignored)
+├── data/external/          <- Third-party data, e.g. PTB-XL ECG records from `load_ptbxl_ecg` (git-ignored)
 ├── reports/figures/        <- Figures used in the notes (mind map from `scripts/make_mind_map.py`, network diagrams, …)
 ├── references/             <- Papers, manuals and other reference material
 └── tests/unit/             <- `test_algorithms.py` checks every algorithm
