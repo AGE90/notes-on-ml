@@ -1,13 +1,16 @@
-"""Draw the 00_foundations/01 intro figures in the mind map style.
+"""Draw the intro figures in the mind map style.
 
--> reports/figures/ai_ml_dl.png, reports/figures/classical_vs_ml.png
+-> reports/figures/ai_ml_dl.png, reports/figures/classical_vs_ml.png (00_foundations/01)
+-> reports/figures/GD.png (01_linear_regression/02)
 
     uv run python scripts/make_intro_figures.py
 """
 
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.patches import Ellipse, FancyBboxPatch
 
+from ml.optimization import gradient_descent
 from ml.utils.paths import reports_figures_dir
 
 ROOT, ML, DL = "#264653", "#4C72B0", "#C44E52"
@@ -54,6 +57,43 @@ def classical_vs_ml() -> None:
     save(fig, "classical_vs_ml.png")
 
 
+# Non-convex J: sum of Gaussian hills (a > 0) and pits (a < 0), as (a, center, width)
+BUMPS = [(2.2, (0.15, -0.6), 0.55), (1.6, (-1.0, 0.9), 0.6), (-2.0, (-1.1, -1.0), 0.5),
+         (-2.4, (1.2, 0.8), 0.6), (-0.8, (1.3, -1.3), 0.45)]
+
+
+def landscape(t: np.ndarray) -> float:
+    return float(sum(a * np.exp(-np.sum((t - c) ** 2) / (2 * w**2)) for a, c, w in BUMPS))
+
+
+def landscape_grad(t: np.ndarray) -> np.ndarray:
+    return sum(-a * (t - np.array(c)) / w**2 * np.exp(-np.sum((t - c) ** 2) / (2 * w**2)) for a, c, w in BUMPS)
+
+
+def gd_landscape() -> None:
+    T0, T1 = np.meshgrid(np.linspace(-2.2, 2.2, 160), np.linspace(-2.2, 2.2, 160))
+    J = np.vectorize(lambda a, b: landscape(np.array([a, b])))(T0, T1)
+    fig = plt.figure(figsize=(9, 6.5))
+    ax = fig.add_subplot(projection="3d", computed_zorder=False)
+    ax.plot_surface(T0, T1, J, cmap="viridis", rstride=2, cstride=2, lw=0, alpha=0.9, antialiased=True, zorder=1)
+    ax.contour(T0, T1, J, levels=15, zdir="z", offset=J.min() - 1, cmap="viridis", linewidths=1, zorder=0)
+    # two nearby starts on the hill roll into different pits
+    for start, color in [((0.0, -0.75), ML), ((0.3, -0.45), DL)]:
+        _, hist = gradient_descent(landscape, landscape_grad, np.array(start), alpha=0.06, max_iter=60)
+        ax.plot(hist[:, 0], hist[:, 1], hist[:, 2] + 0.05, "-o", color=color, ms=3.5, lw=2,
+                mec="white", mew=0.8, zorder=5)
+        ax.scatter(*hist[0, :2], hist[0, 2] + 0.05, s=90, marker="*", color="gold", ec="k", zorder=6)
+        ax.scatter(*hist[-1, :2], hist[-1, 2] + 0.05, s=90, marker="X", color=color, ec="white", zorder=6)
+    ax.set_xlabel(r"$\theta_0$", fontsize=13)
+    ax.set_ylabel(r"$\theta_1$", fontsize=13)
+    ax.set_zlabel(r"$J(\theta_0, \theta_1)$", fontsize=13)
+    ax.set_zlim(J.min() - 1, J.max())
+    ax.view_init(elev=32, azim=-60)
+    ax.set_title("Two nearby starts, two different local minima", fontsize=13, weight="bold", color=ROOT)
+    save(fig, "GD.png")
+
+
 if __name__ == "__main__":
     ai_ml_dl()
     classical_vs_ml()
+    gd_landscape()
