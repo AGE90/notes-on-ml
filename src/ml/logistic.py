@@ -30,17 +30,17 @@ def relu(z: Array) -> Array:
 
 
 def predict_proba(theta: Array, X: Array) -> Array:
-    """$h_\\theta(x) = S(X\\theta) = p(y = 1 \\mid x, \\theta)$."""
+    """$h_{\\boldsymbol{\\theta}}(\\mathbf{x}) = S(X\\boldsymbol{\\theta}) = p(y = 1 \\mid \\mathbf{x}, \\boldsymbol{\\theta})$."""
     return sigmoid(X @ theta)
 
 
 def predict(theta: Array, X: Array, threshold: float = 0.5) -> Array:
-    """Binary prediction: 1 if $h_\\theta(x) \\ge \\gamma$ (threshold), else 0."""
+    """Binary prediction: 1 if $h_{\\boldsymbol{\\theta}}(\\mathbf{x}) \\ge \\gamma$ (threshold), else 0."""
     return (predict_proba(theta, X) >= threshold).astype(int)
 
 
 def cross_entropy_cost(theta: Array, X: Array, y: Array, lam: float = 0.0) -> float:
-    """$J(\\theta) = -\\frac1m \\sum y\\log h + (1-y)\\log(1-h) + \\frac{\\lambda}{2m}\\|\\theta_{1:}\\|^2$."""
+    """$J(\\boldsymbol{\\theta}) = -\\frac1m \\sum y\\log h + (1-y)\\log(1-h) + \\frac{\\lambda}{2m}\\|\\boldsymbol{\\theta}_{1:}\\|^2$."""
     m = len(y)
     h = np.clip(predict_proba(theta, X), EPS, 1 - EPS)
     J = -(y @ np.log(h) + (1 - y) @ np.log(1 - h)) / m
@@ -48,7 +48,7 @@ def cross_entropy_cost(theta: Array, X: Array, y: Array, lam: float = 0.0) -> fl
 
 
 def cross_entropy_gradient(theta: Array, X: Array, y: Array, lam: float = 0.0) -> Array:
-    """$\\nabla J = \\frac1m X^T (h - y)$ (+ $\\frac{\\lambda}{m}\\theta$, bias not regularized)."""
+    """$\\nabla J = \\frac1m X^T (\\mathbf{h} - \\mathbf{y})$ (+ $\\frac{\\lambda}{m}\\boldsymbol{\\theta}$, bias not regularized)."""
     m = len(y)
     g: Array = X.T @ (predict_proba(theta, X) - y) / m
     g[1:] += lam / m * theta[1:]
@@ -86,5 +86,5 @@ def one_vs_all_fit(X: Array, y: Array, **kwargs: float) -> Array:
 
 
 def one_vs_all_predict(Theta: Array, X: Array) -> Array:
-    """Pick the class whose classifier gives the highest $h_\\theta^{(k)}(x)$ (labels 0..K-1)."""
+    """Pick the class whose classifier gives the highest $h_{\\boldsymbol{\\theta}}^{(k)}(\\mathbf{x})$ (labels 0..K-1)."""
     return np.argmax(sigmoid(X @ Theta), axis=1)

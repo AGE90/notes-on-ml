@@ -36,7 +36,7 @@ def plot_cost_surface(
     ax3.contour(T0, T1, J, zdir="z", offset=zmin, cmap="viridis", levels=20)
     ax2 = fig.add_subplot(1, 2, 2)
     cs = ax2.contour(T0, T1, J, levels=30, cmap="viridis")
-    fig.colorbar(cs, ax=ax2, label=r"$J(\theta)$")
+    fig.colorbar(cs, ax=ax2, label=r"$J(\boldsymbol{\theta})$")
     if history is not None:
         ax3.plot(history[:, 0], history[:, 1], history[:, -1], "r.-", zorder=10)
         ax3.plot(history[:, 0], history[:, 1], zmin, "r-")
@@ -52,7 +52,7 @@ def plot_cost_surface(
     for ax in (ax3, ax2):
         ax.set_xlabel(r"$\theta_0$")
         ax.set_ylabel(r"$\theta_1$")
-    ax3.set_zlabel(r"$J(\theta)$")
+    ax3.set_zlabel(r"$J(\boldsymbol{\theta})$")
     ax2.set_aspect("equal", adjustable="box")
     fig.suptitle(title)
     fig.tight_layout()
@@ -62,14 +62,14 @@ def plot_cost_surface(
 def plot_convergence(
     histories: dict[str, Array], ax: Axes | None = None, log: bool = True
 ) -> Axes:
-    """$J(\\theta_k)$ versus iteration $k$ for one or more runs (the "debug GD" plot)."""
+    """$J(\\boldsymbol{\\theta}_k)$ versus iteration $k$ for one or more runs (the "debug GD" plot)."""
     ax = ax or plt.subplots(figsize=(8, 4))[1]
     for label, h in histories.items():
         ax.plot(h[:, -1], ".-", label=f"{label} ({len(h) - 1} it.)")
     if log:
         ax.set_yscale("symlog")
     ax.set_xlabel("iteration $k$")
-    ax.set_ylabel(r"$J(\theta_k)$")
+    ax.set_ylabel(r"$J(\boldsymbol{\theta}_k)$")
     ax.legend()
     return ax
 

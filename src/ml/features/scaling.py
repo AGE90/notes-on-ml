@@ -38,7 +38,7 @@ def min_max(X: Array) -> tuple[Array, Transform]:
 
 
 def unit_norm(X: Array) -> tuple[Array, Transform]:
-    """$x_j := x_j / \\|x_j\\|$ (each column gets norm 1)."""
+    """$\\mathbf{x}_j := \\mathbf{x}_j / \\|\\mathbf{x}_j\\|$ (each column gets norm 1)."""
     X = np.asarray(X, dtype=float)
     return _fit(X, np.zeros(X.shape[1]), np.linalg.norm(X, axis=0))
 

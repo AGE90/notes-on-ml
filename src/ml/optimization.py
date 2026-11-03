@@ -16,9 +16,9 @@ Step = Literal["fixed", "exact", "quadratic"]
 def quadratic(
     A: Array, b: Array
 ) -> tuple[Callable[[Array], float], Callable[[Array], Array]]:
-    """Cost and gradient of the paraboloid $J(\\theta) = \\frac12 \\theta^T A \\theta - b^T \\theta$.
+    """Cost and gradient of the paraboloid $J(\\boldsymbol{\\theta}) = \\frac12 \\boldsymbol{\\theta}^T A \\boldsymbol{\\theta} - \\mathbf{b}^T \\boldsymbol{\\theta}$.
 
-    Minimizing it is the same as solving $A\\theta = b$ (with $A = X^TX$, $b = X^Ty$).
+    Minimizing it is the same as solving $A\\boldsymbol{\\theta} = \\mathbf{b}$ (with $A = X^TX$, $\\mathbf{b} = X^T\\mathbf{y}$).
     """
     return (lambda t: float(0.5 * t @ A @ t - b @ t)), (lambda t: A @ t - b)
 
@@ -26,7 +26,7 @@ def quadratic(
 def _quadratic_interpolation_step(
     cost: Callable[[Array], float], theta: Array, g: Array, tol: float
 ) -> float:
-    """Pick $\\alpha$ by fitting a parabola to $\\varphi(\\alpha) = J(\\theta - \\alpha g)$ at 0, α3/2, α3."""
+    """Pick $\\alpha$ by fitting a parabola to $\\varphi(\\alpha) = J(\\boldsymbol{\\theta} - \\alpha \\mathbf{g})$ at 0, α3/2, α3."""
     phi = lambda a: cost(theta - a * g)  # noqa: E731
     J1, a3 = phi(0.0), 1.0
     while phi(a3) >= J1:  # halve until we find a point that decreases J
@@ -53,14 +53,14 @@ def gradient_descent(
     tol: float = 1e-6,
     max_iter: int = 1000,
 ) -> tuple[Array, Array]:
-    """Steepest descent $\\theta_{k+1} = \\theta_k - \\alpha_k \\nabla J(\\theta_k)$.
+    """Steepest descent $\\boldsymbol{\\theta}_{k+1} = \\boldsymbol{\\theta}_k - \\alpha_k \\nabla J(\\boldsymbol{\\theta}_k)$.
 
     Parameters
     ----------
     step
         How $\\alpha_k$ is chosen:
         ``"fixed"`` uses `alpha` every iteration (trial and error);
-        ``"exact"`` uses the exact line search $\\alpha_k = r_k^T r_k / r_k^T A r_k$,
+        ``"exact"`` uses the exact line search $\\alpha_k = \\mathbf{r}_k^T \\mathbf{r}_k / \\mathbf{r}_k^T A \\mathbf{r}_k$,
         only valid for a quadratic cost with Hessian `A`;
         ``"quadratic"`` uses parabolic interpolation of $\\varphi(\\alpha)$ (any cost).
     tol

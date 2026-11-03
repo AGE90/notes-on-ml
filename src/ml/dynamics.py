@@ -42,9 +42,9 @@ def dmd(X: Array, Xp: Array, r: int) -> tuple[Array, Array]:
     Parameters
     ----------
     X : Array
-        Snapshots $x_1, \\ldots, x_{m-1}$ as columns.
+        Snapshots $\\mathbf{x}_1, \\ldots, \\mathbf{x}_{m-1}$ as columns.
     Xp : Array
-        The same snapshots one time step later, $x_2, \\ldots, x_m$.
+        The same snapshots one time step later, $\\mathbf{x}_2, \\ldots, \\mathbf{x}_m$.
     r : int
         Truncation rank of the SVD of `X`.
 

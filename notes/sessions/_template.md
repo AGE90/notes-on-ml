@@ -8,7 +8,7 @@ What I wanted to understand today.
 
 ## Key ideas
 
-- Idea in words, then the math, e.g. $\nabla J(\theta) = \frac{1}{m}X^T(X\theta - y)$.
+- Idea in words, then the math, e.g. $\nabla J(\boldsymbol{\theta}) = \frac{1}{m}X^T(X\boldsymbol{\theta} - \mathbf{y})$.
 
 $$
 % the main equation of the session
