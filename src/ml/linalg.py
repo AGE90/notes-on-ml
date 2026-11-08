@@ -45,3 +45,48 @@ def pca(X: Array, r: int) -> tuple[Array, Array, Array]:
     _, s, VT = np.linalg.svd(Xc, full_matrices=False)
     V_r = VT[:r].T
     return Xc @ V_r, V_r, s
+
+
+def dft_matrix(n: int) -> Array:
+    """Unitary DFT matrix $F_{kn} = e^{-j 2 \\pi k n / N} / \\sqrt{N}$.
+
+    Parameters
+    ----------
+    n : int
+        Signal length $N$.
+
+    Returns
+    -------
+    Array
+        Complex matrix of shape (n, n) with $F^H F = I$; $F\\mathbf{x}$ equals
+        `np.fft.fft(x, norm="ortho")`.
+    """
+    k = np.arange(n)
+    F: Array = np.exp(-2j * np.pi * np.outer(k, k) / n) / np.sqrt(n)
+    return F
+
+
+def matmul_naive(A: Array, B: Array) -> Array:
+    """Matrix product with three pure-Python loops: the $O(n^3)$ baseline BLAS beats.
+
+    Parameters
+    ----------
+    A : Array
+        Matrix of shape (n, p).
+    B : Array
+        Matrix of shape (p, m).
+
+    Returns
+    -------
+    Array
+        $C = AB$ of shape (n, m).
+    """
+    a, b = A.tolist(), B.tolist()
+    n, p, m = len(a), len(b), len(b[0])
+    C = [[0.0] * m for _ in range(n)]
+    for i in range(n):
+        for k in range(p):
+            aik, row = a[i][k], b[k]
+            for j in range(m):
+                C[i][j] += aik * row[j]
+    return np.array(C)

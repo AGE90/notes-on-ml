@@ -9,7 +9,7 @@ from ml.conv import cross_correlate
 from ml.data import data_loader
 from ml.dynamics import damped_pendulum, dmd, lorenz, slow_manifold_system, van_der_pol
 from ml.features.scaling import standardize
-from ml.linalg import energy, low_rank_approx, pca
+from ml.linalg import dft_matrix, energy, low_rank_approx, matmul_naive, pca
 from ml.linear_models import add_bias, normal_equations, ridge
 from ml.logistic import (
     cross_entropy_cost,
@@ -123,6 +123,15 @@ def test_scaling_and_svd_helpers():
     )
     assert np.allclose(low_rank_approx(X, 3), X)
     assert np.isclose(energy(np.linalg.svd(X, compute_uv=False))[-1], 1.0)
+
+
+def test_dft_matrix_and_naive_matmul():
+    F = dft_matrix(16)
+    x = rng.normal(size=16)
+    assert np.allclose(F.conj().T @ F, np.eye(16))
+    assert np.allclose(F @ x, np.fft.fft(x, norm="ortho"))
+    A, B = rng.normal(size=(4, 3)), rng.normal(size=(3, 5))
+    assert np.allclose(matmul_naive(A, B), A @ B)
 
 
 def test_cross_correlate_matches_scipy():

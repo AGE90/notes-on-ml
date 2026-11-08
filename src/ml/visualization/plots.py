@@ -110,3 +110,31 @@ def plot_decision_boundary(
     ax.set_xlabel("$x_1$")
     ax.set_ylabel("$x_2$")
     return ax
+
+
+def plot_linear_map(ax: Axes, A: Array, title: str = "", lim: float = 2.5) -> Axes:
+    """Draw how the 2x2 matrix `A` moves a square grid, the unit circle and the basis.
+
+    The grid (gray), the unit circle (black) and $A\\mathbf{e}_1$, $A\\mathbf{e}_2$
+    (blue, orange) are drawn after the transformation; the faint dashed circle is
+    the original one, for comparison.
+    """
+    s = np.linspace(-2, 2, 9)
+    line = np.linspace(-2, 2, 50)
+    for c in s:
+        for pts in (
+            np.vstack([np.full_like(line, c), line]),
+            np.vstack([line, np.full_like(line, c)]),
+        ):
+            ax.plot(*(A @ pts), c="0.8", lw=0.6)
+    angle = np.linspace(0, 2 * np.pi, 200)
+    circle = np.vstack([np.cos(angle), np.sin(angle)])
+    ax.plot(*circle, "k:", lw=0.8)
+    ax.plot(*(A @ circle), "k", lw=1.5)
+    for col, color in zip(A.T, ("C0", "C1"), strict=True):
+        ax.annotate(
+            "", col, (0, 0), arrowprops={"arrowstyle": "->", "color": color, "lw": 2}
+        )
+    ax.grid(False)
+    ax.set(xlim=(-lim, lim), ylim=(-lim, lim), aspect="equal", title=title)
+    return ax
